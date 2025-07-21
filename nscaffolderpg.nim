@@ -22,8 +22,8 @@ usage:
 
 let params =  commandLineParams()
 if params.len != 5: 
-  echo "Invalid number of paramaters"
-  echo help
+  stderr.write "Invalid number of paramaters"
+  stderr.write help
   quit(1)
 
 let dbLocation = params[0]
@@ -36,8 +36,8 @@ let db =
   try:
     db_postgres.open(dbLocation, userName, dbPassword, database)
   except: 
-    echo "Failed to connect to the database. Make sure you're using the CLI params correctly" 
-    echo help   
+    stderr.write "Failed to connect to the database. Make sure you're using the CLI params correctly" 
+    stderr.write help   
     quit(1)
 
 
@@ -76,12 +76,12 @@ for (table, data) in tableInfo.pairs:
       echo "NOT FOUND:"
       echo column[1]
 
+if result.len == 1:
+  stderr.write "it seems we've failed to read any results. Make sure that you're correctly using the CLI"
+  stderr.write help
+  quit(1)
+
 echo imports.toSeq().join("\n")
 
 echo result.join("\n")
 
-echo result
-
-if result.len == 0:
-  echo "it seems we've failed to read any results. Make sure that you're correctly using the CLI"
-  quit(1)
